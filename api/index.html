@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>創業雷達 - AI創業分析</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: sans-serif; background: #f5f5f5; color: #333; }
+  .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+  h1 { font-size: 2rem; text-align: center; margin-bottom: 10px; }
+  p { text-align: center; color: #666; margin-bottom: 30px; }
+  textarea { width: 100%; height: 120px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; resize: none; }
+  button { width: 100%; padding: 15px; background: #e8622a; color: white; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; margin-top: 10px; }
+  button:hover { background: #d4561f; }
+  #result { margin-top: 30px; background: white; padding: 30px; border-radius: 8px; display: none; white-space: pre-wrap; line-height: 1.8; }
+  #loading { text-align: center; margin-top: 20px; display: none; color: #666; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>創業雷達</h1>
+  <p>輸入你的創業想法，AI幫你做市場分析</p>
+  <textarea id="idea" placeholder="描述你的創業想法，例如：我想做一個幫學生找家教的app"></textarea>
+  <button onclick="analyze()">開始分析</button>
+  <div id="loading">AI分析中，請稍候...</div>
+  <div id="result"></div>
+</div>
+<script>
+async function analyze() {
+  const idea = document.getElementById('idea').value;
+  if (!idea) { alert('請輸入創業想法'); return; }
+  
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('result').style.display = 'none';
+  
+  const response = await fetch('/api/analyze', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ idea })
+  });
+  
+  const data = await response.json();
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('result').innerText = data.result;
+}
+</script>
+</body>
+</html>
